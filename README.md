@@ -87,6 +87,6 @@ Thanks to Professor Diego Pinheiro, PhD, for his support and guidance throughout
 ## References
 1. Dal Maso, C., Pompa, G., Puliga, M., Riotta, G., & Chessa, A. (2014). Voting Behavior, Coalitions and Government Strength through a Complex Network Analysis. *PLOS ONE, 9*(12), e116046. https://doi.org/10.1371/journal.pone.0116046
 
-2. Anwar, S., & Mihalcea, R. (2011). An Approach for Probabilistic Modeling and Reasoning of Voting Networks. *Proceedings of the 22nd International Joint Conference on Artificial Intelligence - Volume Three*, 2283-2288. https://doi.org/10.5591/978-1-57735-516-8/IJCAI11-382
+2. Cardoso, D. O., Lima, W. P. C., Silva, G. G. V. L., & Assis, L. S. (2023). An Approach for Probabilistic Modeling and Reasoning of Voting Networks. *In: Proceedings of the 22nd International Conference on Computational Science (ICCS 2023),* Springer, Cham, pp. 74-89. https://doi.org/10.1007/978-3-031-36024-4_7
 
 3. Bari, A., Brower, W., & Davidson, C. (2021). Using Artificial Intelligence to Predict Legislative Votes in the United States Congress. *2021 IEEE the 6th International Conference on Big Data Analytics (ICBDA)*, 56-60. https://doi.org/10.1109/ICBDA51983.2021.9403106
