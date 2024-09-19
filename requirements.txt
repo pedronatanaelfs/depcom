@@ -1,6 +1,2 @@
-ipykernel
-pandas
-matplotlib
-ipywidgets
-seaborn
-ipython
+basedosdados==1.5.4
+

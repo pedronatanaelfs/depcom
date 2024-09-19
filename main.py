@@ -1,32 +1,35 @@
 import os
-from scripts.get_data import data_orgao_deputado, data_proposicao_microdados, data_proposicao_tema, data_votacao_objeto, data_votacao_parlamentar, data_votacao
-from scripts.data_processing import process_prepositions  # Import the new script
+import sys
+print("Script Python executable:", sys.executable)
+print("Script sys.path:", sys.path)
 
-# Define the base directory to save the files
-data_dir = "data/dados_abertos/"
+# Add the 'get_data' directory to sys.path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+get_data_dir = os.path.join(script_dir, 'depucom', 'src', 'get_data')
+sys.path.append(get_data_dir)
 
-def process_all_data():
-    print("Processing orgao_deputado.csv...")
-    data_orgao_deputado.process_data(os.path.join(data_dir, 'orgao_deputado.csv'))
+# Import functions from the scripts
+from data_orgao_deputado import get_data_orgao_deputado
+from data_proposicao_microdados import get_data_proposicao_microdados
+from data_proposicao_tema import get_data_proposicao_tema
+from data_votacao_objeto import get_data_votacao_objeto
+from data_votacao_parlamentar import get_data_votacao_parlamentar
+from data_votacao import get_data_votacao
 
-    print("Processing proposicao_microdados.csv...")
-    data_proposicao_microdados.process_data(os.path.join(data_dir, 'proposicao_microdados.csv'))
+def main():
+    # Define the data directory
+    data_dir = 'data/processed'
 
-    print("Processing proposicao_tema.csv...")
-    data_proposicao_tema.process_data(os.path.join(data_dir, 'proposicao_tema.csv'))
+    # Ensure the directory exists
+    os.makedirs(data_dir, exist_ok=True)
 
-    print("Processing votacao_objeto.csv...")
-    data_votacao_objeto.process_data(os.path.join(data_dir, 'votacao_objeto.csv'))
+    # Call the functions from the scripts
+    get_data_orgao_deputado(data_dir)
+    get_data_proposicao_microdados(data_dir)
+    get_data_proposicao_tema(data_dir)
+    get_data_votacao_objeto(data_dir)
+    get_data_votacao_parlamentar(data_dir)
+    get_data_votacao(data_dir)
 
-    print("Processing votacao_parlamentar.csv...")
-    data_votacao_parlamentar.process_data(os.path.join(data_dir, 'votacao_parlamentar.csv'))
-
-    print("Processing votacao.csv...")
-    data_votacao.process_data(os.path.join(data_dir, 'votacao.csv'))
-
-    print("Running prepositions analysis script...")
-    process_prepositions.main()  
-
-if __name__ == "__main__":
-    process_all_data()
-
+if __name__ == '__main__':
+    main()

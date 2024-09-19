@@ -1,9 +1,17 @@
 import basedosdados as bd
+import os
 
-# Para carregar o dado direto no pandas
-df = bd.read_table(dataset_id='br_camara_dados_abertos',
-                   table_id='votacao_parlamentar',
-                   billing_project_id="voting-networks")
+def get_data_votacao_parlamentar(data_dir):
+    # Load the data directly into pandas
+    df = bd.read_table(dataset_id='br_camara_dados_abertos',
+                       table_id='votacao_parlamentar',
+                       billing_project_id="voting-networks")
 
-# Salvar o DataFrame em um arquivo CSV
-df.to_csv('data/votacao_parlamentar.csv', index=False)
+    # Ensure the directory exists
+    os.makedirs(data_dir, exist_ok=True)
+
+    # Full path of the file
+    file_path = os.path.join(data_dir, 'votacao_parlamentar.csv')
+
+    # Save the DataFrame to a CSV file
+    df.to_csv(file_path, index=False)
