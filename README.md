@@ -10,65 +10,80 @@
 
 **Task**: Final Project
 
-# Analysis of Political Alliances and Community Detection in the Brazilian Senate Voting Network
+# Analysis of Political Alliances and Community Detection in the Brazilian Congress Voting Network
 
 ## Abstract
 
-The Brazilian Senate plays a pivotal role in shaping the nation’s legislative framework. Understanding the underlying dynamics of voting behavior and political alliances within the Senate is crucial for comprehending the broader political landscape. This research aims to analyze the voting patterns in the Brazilian Senate through advanced network analysis techniques, focusing on the detection of political communities and the examination of alliance patterns among political parties. By applying methods such as the Leiden algorithm for community detection and machine learning models for predictive analysis, this study seeks to simulate various political scenarios and anticipate shifts in alliances based on historical voting data.
+Understanding how political alliances and voting patterns in the Brazilian Congress evolve over time is crucial for analyzing the ideological positioning of political parties, their loyalty to party lines, and the influence of the president's party on legislative behavior. This research seeks to address key questions about the political landscape in Brazil by examining the voting records of Congress using advanced network analysis techniques. The primary focus is on detecting communities within the voting network, analyzing the shifts in party alliances, and determining the extent to which ideological divides between the left, center, and right influence voting outcomes. Additionally, the project explores how different filtering methods and edge pruning techniques affect the quality of community detection.
 
 ### Background
-The Brazilian Senate plays a crucial role in policy formulation and law approval. The analysis of voting networks can reveal hidden patterns of political alliances and influence blocks that may not be immediately apparent in a superficial analysis. Previous studies have explored the application of complex network analysis to understand voting behavior and political polarization in legislative bodies.
+The Brazilian Congress, as the legislative backbone of the country, influences key national policies. By analyzing voting networks, it is possible to observe deeper, often hidden, patterns of political alignment, party loyalty, and shifting ideological positions. Previous research has shown that network analysis can reveal these hidden patterns, but few studies have delved into long-term changes in the alignment of political parties within the Brazilian context.
 
-One relevant study is "Voting Behavior, Coalitions and Government Strength through a Complex Network Analysis" by Carlo Dal Maso et al., which examines the community structure in parliaments, focusing on the Italian Chamber of Deputies. This study introduces methods to measure party polarization, coalition cohesiveness, and government stability, providing a framework applicable to other legislative bodies, including the Brazilian Senate.
+One relevant work is "Voting Behavior, Coalitions and Government Strength through a Complex Network Analysis" by Carlo Dal Maso et al., which provides a method for detecting communities within legislative bodies based on voting patterns. Another significant study, "An Approach for Probabilistic Modeling and Reasoning of Voting Networks," applies probabilistic models to predict future voting behavior based on past patterns. These studies, combined with others that explore the role of AI in legislative prediction, lay the groundwork for a deeper analysis of the Brazilian Congress.
 
-Another significant work is "An Approach for Probabilistic Modeling and Reasoning of Voting Networks", which discusses the use of probabilistic models to understand and predict voting behaviors in legislative networks. This research is particularly relevant for understanding the underlying dynamics of voting patterns and the formation of alliances.
-
-Lastly, the study "Using Artificial Intelligence to Predict Legislative Votes in the United States Congress" demonstrates the potential of AI and machine learning in predicting legislative outcomes. Although focused on the U.S. Congress, the methodologies discussed offer valuable insights for similar applications in the Brazilian legislative context.
-
-By building on these studies, the current research aims to detect and analyze the political communities formed through voting in the Brazilian Senate, with a focus on identifying patterns of alliances between political parties in significant votes. Additionally, it seeks to predict how these alliances may change under different political scenarios using simulation techniques and dynamic network analysis.
+This research aims to explore how political alliances and party positions have shifted over time, particularly in response to changes in government leadership and broader political contexts. It also investigates methodological questions around how different filters and edge pruning strategies can optimize the detection of these communities.
 
 ### Objectives
 
-The primary objective of this research is to explore the formation and evolution of political alliances within the Brazilian Senate by applying advanced network analysis techniques. Specifically, this study aims to:
+The specific objectives of this research are as follows:
 
-1. **Detect Political Communities**: Identify and analyze communities within the voting network of the Brazilian Senate, focusing on the dynamics of these communities over time.
-   
-2. **Understand Alliance Patterns**: Examine the patterns of alliances between political parties during key legislative votes, and determine how these alliances are influenced by political contexts such as government changes, crises, and electoral periods.
-   
-3. **Predict Future Alliances**: Utilize machine learning and probabilistic models to forecast the likelihood of future alliances and voting outcomes based on historical voting data and simulated political scenarios.
-   
-4. **Simulate Political Scenarios**: Implement dynamic network analysis to simulate various political scenarios (e.g., changes in government coalitions, political crises) and predict their impact on the stability and formation of political alliances.
-   
-5. **Evaluate Algorithmic Improvements**: Assess the effectiveness of different community detection algorithms, such as the Leiden algorithm, by testing variations and comparing their performance using metrics like modularity, NMI, and ARI.
+1. **Analyze Political Alignment Over Time:** Investigate the ideological shifts of political parties, especially those that claim to be centrist, and observe how their position has changed over the years relative to the left and right.
+
+2. **Evaluate Political Influence:** Examine which political side (left or right) holds greater power in Congress and identify the parties whose deputies show the highest loyalty in voting.
+
+3. **Impact of the President’s Party:** Assess whether the ruling party of the president influences the overall positioning of other parties in Congress during key legislative decisions.
+
+4. **Optimize Community Detection:** Explore how filtering more polarized propositions affects the quality of community detection and assess which filtering methods are best suited for different political contexts.
+
+5. **Improve Graph Pruning Methods:** Investigate how edge pruning influences the clarity and accuracy of detected political communities and how to automate the pruning process to optimize network analysis results.
+
+6. **Alliance Formation and Shifts:** Simulate how changes in government or political crises influence the formation of alliances, using dynamic network analysis to predict shifts in these alliances.
 
 ### Methods
 
-To achieve these objectives, the research employs a comprehensive methodology that integrates network science, machine learning, and political analysis. The key steps in the methodology are as follows:
+The methodology is structured into several key steps that involve data acquisition, processing, analysis of voting patterns, and visualization of political party positions over time. The steps are designed to optimize the detection of political communities and answer the core research questions regarding political alignment, loyalty, and the impact of government changes on alliances.
 
-1. **Data Collection**:
-   - **Voting Data**: Extract voting records from the Brazilian Senate, focusing on key legislative periods and significant votes. Data is obtained from reliable sources such as "Base dos Dados."
-   - **Political Context Data**: Gather information on political contexts, including government compositions, electoral cycles, and significant political events.
+ Data Acquisition:
 
-2. **Community Detection**:
-   - **Algorithm Selection**: Apply the Leiden algorithm to detect communities within the voting network. The algorithm is chosen for its ability to uncover well-connected communities and is tested with different parameters to optimize detection.
-   - **Algorithm Evaluation**: Compare the performance of the Leiden algorithm with other community detection methods (e.g., Louvain) using metrics such as modularity, NMI (Normalized Mutual Information), and ARI (Adjusted Rand Index).
-   - **Temporal Analysis**: Conduct a temporal analysis to observe how communities evolve over time, particularly in response to political events.
+- The first step is to acquire voting data and political context information. The data includes voting records, deputies' details, and metadata on each proposition. This data is sourced primarily from Base dos Dados and other publicly available repositories.
 
-3. **Alliance Analysis**:
-   - **Network Construction**: Build a network where nodes represent political parties and edges represent alliances or voting similarities. Utilize metrics like Jaccard similarity to quantify the strength of alliances.
-   - **Ideological Correlation**: Analyze the correlation between party ideologies and the formation of alliances using network metrics and statistical methods.
-   - **Scenario Simulation**: Simulate various political scenarios (e.g., changes in government, crises) using dynamic network analysis to predict shifts in alliances and community structures.
+2. Data Processing:
 
-4. **Machine Learning Models**:
-   - **Model Training**: Train machine learning models, such as logistic regression and random forest, to predict the outcomes of future legislative votes based on historical data. The models will incorporate features such as party affiliations, historical voting behavior, and political context.
-   - **Feature Engineering**: Develop and refine features based on the political context, party characteristics, and detected community structures.
-   - **Model Evaluation**: Evaluate model performance using cross-validation and metrics such as accuracy, precision, recall, and F1-score.
+- After acquiring the raw data, it undergoes filtering and preprocessing to remove irrelevant or incomplete records. A critical part of this step involves filtering propositions to focus on the most polarized votes, which are more likely to reveal meaningful political divisions.
 
-5. **Simulation and Prediction**:
-   - **Dynamic Network Simulation**: Implement simulations to model how changes in political scenarios (e.g., new coalitions, electoral periods) might affect future voting patterns and alliance formations.
-   - **Predictive Analysis**: Use the trained models and simulated data to forecast potential changes in alliances and voting outcomes, providing insights into future legislative dynamics.
+3. Prepare Voting Data:
 
-This comprehensive approach combines the strengths of network science, machine learning, and political analysis to provide a deep understanding of the Brazilian Senate's voting dynamics and offer predictive insights into future political alliances.
+- Remove duplicates from the dataset, ensuring each deputy is only listed once. This prepares the dataset for analysis of individual voting behavior and party alignment.
+
+4. Optimize Polarization Interval and Perform Analysis:
+
+- The critical analysis of this research involves optimizing the polarization interval of the voting data. This step identifies the propositions that exhibit the highest levels of polarization, which are essential for detecting distinct political communities and understanding party alignments.
+  
+- This function refines the dataset, focusing on votes where ideological divisions are most clear, which helps in detecting political communities and evaluating party loyalty and shifts over time.
+
+5. Visualizing Political Alignment:
+
+- After optimizing the polarization intervals, the next step involves visualizing how political parties have shifted over the years. Graphs will be plotted to show party alignment on a left-right spectrum, as well as how centrist parties have moved closer to the left or right over time.
+  
+- These visualizations will help answer questions such as "Which side of the political spectrum holds more influence?" and "How do parties that identify as centrist behave over time?"
+
+6. Community Detection:
+
+- The filtered voting data will be used to detect communities within the voting network. Community detection methods such as the Leiden algorithm will be applied to reveal clusters of political alliances.
+
+- Parameters for the community detection algorithm will be tuned using metrics like modularity and NMI, ensuring that the results are both accurate and meaningful in the context of political behavior.
+
+7. Answering Research Questions:
+
+Throughout the analysis, specific steps will be taken to address the core questions:
+
+- **Political Positioning:** Graphs of political alignment will show how parties have shifted over time, particularly focusing on centrist parties and their behavior.
+
+- **Loyalty and Power:** Metrics will be calculated to determine which parties exhibit the highest loyalty and which side of the spectrum holds more power in Congress.
+
+- **Influence of the President’s Party:** Temporal analysis will assess whether the party of the president affects the positioning and behavior of other parties.
+
+- **Filtering and Pruning:** The research will also test how filtering polarized propositions and edge pruning can improve the detection of communities, optimizing both the accuracy and clarity of the detected political groups.
 
 ### Results
 Summarize the main findings, including statistical significance, if applicable. Highlight any critical data points and trends observed.
@@ -77,7 +92,7 @@ Summarize the main findings, including statistical significance, if applicable. 
 State the conclusions drawn from the results, emphasizing how they address the research problem. Discuss any implications for future research or practical applications.
 
 ### Keywords
-Voting Networks, Community Detection, Political Alliances, Brazilian Senate, Dynamic Networks, Scenario Simulation
+Political Alliances, Community Detection, Brazilian Congress, Voting Networks, Party Loyalty, Dynamic Networks
 
 ---
 
