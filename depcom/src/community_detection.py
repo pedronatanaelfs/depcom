@@ -29,33 +29,42 @@ def prune_graph(G, pruning_percentage):
 
     return G
 
-def detect_communities(G):
+def detect_communities(G, random_state=None):
     """
     Detects communities in the graph using the Leiden algorithm.
 
     Args:
         G (nx.Graph): The graph.
+        random_state (int, optional): Seed for the random number generator.
 
     Returns:
         tuple: A tuple containing the community mapping and modularity.
     """
     # Convert NetworkX graph to iGraph
     ig_graph = ig.Graph.from_networkx(G)
-    partition = leidenalg.find_partition(ig_graph, leidenalg.ModularityVertexPartition)
+    partition = leidenalg.find_partition(
+        ig_graph,
+        leidenalg.ModularityVertexPartition,
+        seed=random_state
+    )
     modularity = partition.modularity
 
     # Map community labels back to NetworkX nodes
-    communities = {node: membership for node, membership in zip(G.nodes(), partition.membership)}
+    communities = {
+        node: membership for node, membership in zip(G.nodes(), partition.membership)
+    }
 
     return communities, modularity
 
-def analyze_pruning(G, pruning_percentages):
+
+def analyze_pruning(G, pruning_percentages, random_state=None):
     """
     Analyzes the effect of pruning on community detection.
 
     Args:
         G (nx.Graph): The original graph.
         pruning_percentages (list): A list of pruning percentages.
+        random_state (int, optional): Seed for the random number generator.
 
     Returns:
         list: A list of dictionaries containing the results for each pruning percentage.
@@ -63,7 +72,7 @@ def analyze_pruning(G, pruning_percentages):
     results = []
     for p in pruning_percentages:
         G_pruned = prune_graph(G.copy(), p)
-        communities, modularity = detect_communities(G_pruned)
+        communities, modularity = detect_communities(G_pruned, random_state=random_state)
         num_communities = len(set(communities.values()))
         results.append({
             'pruning_percentage': p,

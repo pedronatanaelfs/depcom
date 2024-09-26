@@ -53,16 +53,17 @@ def calculate_yes_vote_percentage(df):
     df['yes_vote_percentage'] = df['voto_sim'] / df['total_votes']
     return df
 
-def filter_polarized_votacoes(df, lower_bound=0.4, upper_bound=0.6):
+def filter_polarized_votacoes(df, lower_bound, upper_bound):
     """
-    Filters votacoes to those with 'yes_vote_percentage' between the given bounds.
+    Filters votacoes to keep only those where the percentage of 'Sim' votes
+    is between lower_bound and upper_bound.
 
     Args:
-        df (pd.DataFrame): The DataFrame to filter.
-        lower_bound (float): The lower percentage bound.
-        upper_bound (float): The upper percentage bound.
+        df (pd.DataFrame): DataFrame containing votacoes data.
+        lower_bound (float): Lower bound percentage (0-100).
+        upper_bound (float): Upper bound percentage (0-100).
 
     Returns:
-        pd.DataFrame: The filtered DataFrame.
+        pd.DataFrame: Filtered DataFrame.
     """
     return df[(df['yes_vote_percentage'] >= lower_bound) & (df['yes_vote_percentage'] <= upper_bound)]
