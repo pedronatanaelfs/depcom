@@ -37,8 +37,6 @@ The specific objectives of this research are as follows:
 
 5. **Improve Graph Pruning Methods:** Investigate how edge pruning influences the clarity and accuracy of detected political communities and how to automate the pruning process to optimize network analysis results.
 
-6. **Alliance Formation and Shifts:** Simulate how changes in government or political crises influence the formation of alliances, using dynamic network analysis to predict shifts in these alliances.
-
 ### Methods
 
 The methodology is structured into several key steps that involve data acquisition, processing, analysis of voting patterns, and visualization of political party positions over time. The steps are designed to optimize the detection of political communities and answer the core research questions regarding political alignment, loyalty, and the impact of government changes on alliances.
