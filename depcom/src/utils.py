@@ -132,23 +132,24 @@ def optimize_polarization_interval(df_filtered, df_deputados, fixed_random_state
         fixed_random_state (int): Random state for reproducibility.
 
     Returns:
-        list: Final results containing the best intervals and metrics for each year.
+        tuple: Final summary results and detailed results.
     """
-    final_results = []
+    final_summary_results = []
+    detailed_results = []
 
     # Step 3: Graph Generation
     df_votacao_parlamentar = pd.read_csv('data/csv/votacao_parlamentar.csv')
 
-    # Convert 'data' column to datetime and extract 'ano_votacao'
-    df_votacao_parlamentar['data'] = pd.to_datetime(df_votacao_parlamentar['data'])
+    # Convert 'voting_date' column to datetime and extract 'ano_votacao'
+    df_votacao_parlamentar['data'] = pd.to_datetime(df_votacao_parlamentar['data'], errors='coerce')
     df_votacao_parlamentar['ano_votacao'] = df_votacao_parlamentar['data'].dt.year
 
     # Define years to analyze
-    years = df_votacao_parlamentar['ano_votacao'].unique()
+    years = df_votacao_parlamentar['ano_votacao'].dropna().unique()
 
     for year in years:
         print(f"\nProcessing year: {year}")
-        # Filter votes for the current year
+        # Filter votes for the current year based on 'ano_votacao'
         df_votes_year = df_votacao_parlamentar[df_votacao_parlamentar['ano_votacao'] == year]
 
         # Define polarization intervals to test
@@ -160,9 +161,9 @@ def optimize_polarization_interval(df_filtered, df_deputados, fixed_random_state
 
         for lower_bound, upper_bound in intervals:
             print(f"Testing polarization interval: {lower_bound}% - {upper_bound}%")
-            # Filter polarized votacoes
+            # Filter polarized votacoes by 'ano_votacao'
             df_polarized = filter_polarized_votacoes(
-                df_filtered[df_filtered['voting_year'] == year],
+                df_filtered[df_filtered['voting_date'].dt.year == year],
                 lower_bound*0.01,
                 upper_bound*0.01
             )
@@ -206,6 +207,18 @@ def optimize_polarization_interval(df_filtered, df_deputados, fixed_random_state
             # Detect communities on the pruned graph with a fixed random state
             communities, modularity = detect_communities(G_optimal, random_state=fixed_random_state)
 
+            # Collect detailed results for plotting
+            for res in results:
+                detailed_results.append({
+                    'Year': year,
+                    'Polarization Lower Bound (%)': lower_bound,
+                    'Polarization Upper Bound (%)': upper_bound,
+                    'Pruning Percentage (%)': res['pruning_percentage'],
+                    'Number of Communities': res['num_communities'],
+                    'Modularity': res['modularity']
+                })
+
+            # Check if this modularity is the best for the year
             if modularity > best_modularity:
                 best_modularity = modularity
                 best_interval = (lower_bound, upper_bound)
@@ -214,7 +227,8 @@ def optimize_polarization_interval(df_filtered, df_deputados, fixed_random_state
                     'Optimal Pruning Percentage (%)': optimal_pruning_percentage,
                     'Number of Communities': len(set(communities.values())),
                     'Modularity': modularity,
-                    'Polarization Interval': f"{lower_bound}% - {upper_bound}%"
+                    'Polarization Lower Bound (%)': lower_bound,
+                    'Polarization Upper Bound (%)': upper_bound
                 }
                 # Save the best graph and communities
                 best_G_optimal = G_optimal
@@ -313,35 +327,39 @@ def optimize_polarization_interval(df_filtered, df_deputados, fixed_random_state
         save_graph(best_G_optimal, graph_path_with_communities)
         print(f"Graph with communities saved to {graph_path_with_communities}")
 
-        # Collect final results
-        final_results.append(best_results_summary)
+        # Collect final summary results
+        final_summary_results.append(best_results_summary)
 
-    return final_results
+    return final_summary_results, detailed_results
 
-def save_results(num_propositions_before, num_propositions_after, results_summary):
+def save_results(final_summary_results, detailed_results):
     """
-    Outputs final results and saves them to a CSV file.
+    Outputs final summary results and detailed results, and saves them to CSV files.
 
     Args:
-        num_propositions_before (int): Number of propositions before filtering.
-        num_propositions_after (int): Number of propositions after filtering.
-        results_summary (list): Summary of results for each year.
+        final_summary_results (list): List of dictionaries containing summary results for each year.
+        detailed_results (list): List of dictionaries containing detailed results for each polarization interval and pruning percentage.
     """
-    # Step 5: Final Results
-    print("\n=== Final Results ===")
-    print(f"Number of propositions before polarization filter: {num_propositions_before}")
-    print(f"Number of propositions after polarization filter: {num_propositions_after}")
+    # Save summary results
+    if final_summary_results:
+        df_final_summary = pd.DataFrame(final_summary_results)
+        print("\n=== Final Summary Results ===")
+        print(df_final_summary)
+        summary_csv_path = 'data/results_summary.csv'
+        df_final_summary.to_csv(summary_csv_path, index=False)
+        print(f"\nSummary results saved to {summary_csv_path}")
+    else:
+        print("\nNo summary results to save.")
 
-    # Convert results_summary to a DataFrame
-    df_results = pd.DataFrame(results_summary)
-
-    # Print the DataFrame
-    print("\nSummary of Results:")
-    print(df_results)
-
-    # Save the DataFrame to a CSV file
-    results_csv_path = 'data/results_summary.csv'
-    df_results.to_csv(results_csv_path, index=False)
-    print(f"\nResults summary saved to {results_csv_path}")
+    # Save detailed results
+    if detailed_results:
+        df_detailed = pd.DataFrame(detailed_results)
+        print("\n=== Detailed Results ===")
+        print(df_detailed)
+        detailed_csv_path = 'data/detailed_results.csv'
+        df_detailed.to_csv(detailed_csv_path, index=False)
+        print(f"\nDetailed results saved to {detailed_csv_path}")
+    else:
+        print("\nNo detailed results to save.")
 
     print("\nProcessing completed successfully.")
