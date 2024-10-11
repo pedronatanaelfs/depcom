@@ -190,3 +190,32 @@ def plot_party_comparison_consistent(party_data_by_year, top_parties, partido_1=
         plt.close()
 
     print(f"Plots saved to {output_dir}")
+
+def export_party_community_table(party_data_by_year, output_file='data/party_community_table.csv'):
+    """
+    Exporta uma tabela que lista os partidos e o número de deputados em cada comunidade por ano,
+    organizados do maior para o menor partido.
+    
+    Args:
+        party_data_by_year (pd.DataFrame): DataFrame com os dados dos partidos e comunidades ao longo dos anos.
+        output_file (str): Caminho para salvar a tabela exportada.
+    """
+    # Agrupar os dados por partido, ano e comunidade, e contar o número de deputados
+    grouped_data = party_data_by_year.groupby(['sigla_partido', 'year', 'community']).agg({'count': 'sum'}).reset_index()
+
+    # Criar uma tabela pivot com os anos e comunidades nas colunas
+    pivot_table = grouped_data.pivot_table(index='sigla_partido', columns=['year', 'community'], values='count', fill_value=0)
+
+    # Ordenar os partidos do maior para o menor com base no número total de deputados ao longo dos anos
+    pivot_table['total_deputados'] = pivot_table.sum(axis=1)
+    pivot_table = pivot_table.sort_values(by='total_deputados', ascending=False)
+
+    # Remover a coluna auxiliar "total_deputados"
+    pivot_table = pivot_table.drop(columns='total_deputados')
+
+    # Exportar a tabela para CSV
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    pivot_table.to_csv(output_file)
+    
+    print(f"Party community table exported to {output_file}")
+
