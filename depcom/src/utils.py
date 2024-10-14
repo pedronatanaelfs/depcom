@@ -1,17 +1,16 @@
 import pandas as pd
-import numpy as np
 import os
 import networkx as nx
-import random
-from data_fetching import fetch_all_datasets
-from data_processing import (
+from .A_data_aquisition import fetch_all_datasets
+from .B_data_processing import (
     rename_columns,
     filter_votacoes,
     calculate_yes_vote_percentage,
     filter_polarized_votacoes
 )
-from graph_generation import generate_graph, save_graph
-from community_detection import (
+from .C_optimize_polarization import (
+    generate_graph, 
+    save_graph,
     analyze_pruning,
     prune_graph,
     detect_communities
