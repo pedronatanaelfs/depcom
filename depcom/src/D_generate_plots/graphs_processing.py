@@ -338,3 +338,38 @@ def export_dataframe_to_csv(df, file_name):
     """
     df.to_csv(file_name, index=False)
     print(f"DataFrame exported successfully to {file_name}")
+
+# Função para criar um dataframe com a comunidade de menor número de membros de cada ano, com condições para duas ou mais comunidades
+def get_min_community_generalized(df):
+    # Criar uma cópia do dataframe para evitar modificar o original
+    result_df = df.copy()
+
+    # Obter os anos presentes no dataframe
+    years = range(2003, 2024)  # Intervalo de anos mencionado na pergunta
+
+    # Iterar por cada ano do dataframe
+    for year in years:
+        # Filtrar as colunas correspondentes às comunidades do ano atual
+        community_cols = [col for col in df.columns if col.startswith(f"{year}_")]
+
+        # Verificar o número de comunidades no ano
+        if len(community_cols) == 2:
+            # Se houver apenas duas comunidades, definir o valor mínimo como zero
+            result_df[f"{year}_min"] = 0
+        elif len(community_cols) >= 3:
+            # Se houver três ou mais comunidades, calcular o menor valor entre elas
+            result_df[f"{year}_min"] = result_df[community_cols].min(axis=1)
+
+    # Filtrar apenas as colunas com o sufixo '_min' e a coluna 'party'
+    result_df = result_df[['party'] + [f"{year}_min" for year in years if f"{year}_min" in result_df.columns]]
+
+    return result_df
+
+def merge_min_community_with_suffix_change(df_original, df_min_community):
+    # Renomear as colunas do dataframe de comunidades mínimas, trocando o sufixo '_min' por '_2'
+    df_min_community = df_min_community.rename(columns={col: col.replace('_min', '_2') for col in df_min_community.columns if '_min' in col})
+    
+    # Mesclar os dois dataframes usando a coluna 'party' como chave
+    merged_df = pd.merge(df_original, df_min_community, on='party', how='left')
+    
+    return merged_df
