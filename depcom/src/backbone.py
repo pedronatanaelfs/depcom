@@ -82,28 +82,3 @@ def analyze_voting_network(df_votes, year):
         'Num_Communities': len(communities),
         'Community_Party_Count': community_party_count
     }
-
-def main():
-    """
-    Fluxo principal de execução do código.
-    """
-    df_merged, df_orgao_deputado = data_processing()
-    df_votacao_parlamentar = pd.read_csv('data/csv/votacao_parlamentar.csv')
-    df_votacao_parlamentar['data'] = pd.to_datetime(df_votacao_parlamentar['data'])
-    df_votacao_parlamentar['ano_votacao'] = df_votacao_parlamentar['data'].dt.year
-
-    years = df_votacao_parlamentar['ano_votacao'].dropna().unique()
-    results = []
-
-    for year in years:
-        df_votes_year = df_votacao_parlamentar[df_votacao_parlamentar['ano_votacao'] == year]
-        result = analyze_voting_network(df_votes_year, year)
-        results.append(result)
-
-    # Salvar resultados em um arquivo CSV
-    results_df = pd.DataFrame(results)
-    results_df.to_csv('data/results_backbone.csv', index=False)
-    print("Resultados salvos em 'data/results_backbone.csv'.")
-
-if __name__ == "__main__":
-    main()

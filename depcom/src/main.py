@@ -113,6 +113,25 @@ def main():
     export_dataframe_to_csv(sorted_df, 'data/party_community_table_adjusted.csv')
 
     #plot_community_graphs('data/party_community_table_adjusted.csv')
+    
+    df_merged, df_orgao_deputado = data_processing()
+    df_votacao_parlamentar = pd.read_csv('data/csv/votacao_parlamentar.csv')
+    df_votacao_parlamentar['data'] = pd.to_datetime(df_votacao_parlamentar['data'])
+    df_votacao_parlamentar['ano_votacao'] = df_votacao_parlamentar['data'].dt.year
+
+    # Define o intervalo de anos entre 2004 e 2023
+    years = range(2004, 2024)
+    results = []
+
+    for year in years:
+        df_votes_year = df_votacao_parlamentar[df_votacao_parlamentar['ano_votacao'] == year]
+        result = analyze_voting_network(df_votes_year, year)
+        results.append(result)
+
+    # Salvar resultados em um arquivo CSV
+    results_df = pd.DataFrame(results)
+    results_df.to_csv('data/results_backbone.csv', index=False)
+    print("Resultados salvos em 'data/results_backbone.csv'.")
 
 if __name__ == "__main__":
     main()
