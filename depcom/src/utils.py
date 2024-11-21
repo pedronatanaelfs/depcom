@@ -2,13 +2,13 @@ import pandas as pd
 import os
 import networkx as nx
 from A_data_aquisition import fetch_all_datasets
-from B_data_processing import (
+from B_data_pre_processing import (
     rename_columns,
     filter_votacoes,
     calculate_yes_vote_percentage,
     filter_polarized_votacoes
 )
-from C_optimize_polarization import (
+from C_modularity_optimization import (
     generate_graph, 
     save_graph,
     analyze_pruning,

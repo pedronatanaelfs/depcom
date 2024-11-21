@@ -2,26 +2,16 @@ import pandas as pd
 import numpy as np
 import random
 from utils import data_acquisition, data_processing, optimize_polarization_interval, save_results
-import os
-from D_generate_plots import (
-    generate_all_plots, 
-    generate_all_party_inclination_plots,
+from backbone import analyze_voting_network, data_processing_backbone
+from D_temporal_consistency import (
     load_graphs, 
     get_party_percentages_by_year, 
-    rank_parties_by_deputies, 
-    get_parties_by_year, 
-    get_deputados_for_retained_parties, 
-    get_deputados_for_current_parties, 
-    rank_parties_by_percentage_difference, 
-    get_top_parties_per_community_last_year, 
-    plot_party_comparison_consistent,
     export_party_community_table, 
     clean_dataframe, 
     adjust_community_labels, 
     sort_columns, 
     get_last_year, 
     export_dataframe_to_csv,
-    plot_community_graphs,
     get_min_community_generalized,
     merge_min_community_with_suffix_change)
 
@@ -33,19 +23,19 @@ def main():
     random.seed(fixed_random_state)
     np.random.seed(fixed_random_state)
 
+    # Step 1: Data Acquisition
+    data_acquisition()
+
     #Prepare voting data
     df_votacao_parlamentar = pd.read_csv('data/csv/votacao_parlamentar.csv')
 
     # Prepare deputies information
     df_deputados = df_votacao_parlamentar[['id_deputado', 'nome', 'sigla_partido', 'sigla_uf']].drop_duplicates(subset='id_deputado')
 
-    # Step 1: Data Acquisition
-    #data_acquisition()
-
-    # Step 2: Data Processing
+    # Step 2: Data Pre-Processing
     df_filtered, num_propositions_before, df_orgao_deputado = data_processing()
     if df_filtered is None:
-        print("Erro no processamento de dados. Encerrando o script.")
+        print("Error in data processing. Ending the script.")
         return
 
     # Step 3: Optimize Polarization Interval and Perform Analysis
@@ -54,45 +44,17 @@ def main():
     #Save Final Results
     save_results(final_summary_results, detailed_results)
 
-    # Step 4: Generate Plots
-    detailed_results_path = 'data/detailed_results.csv'
-    plots_output_dir = 'data/plots'
-
-    # Salvar os dados resumidos para análise (já foi salvo pela função save_results)
-    # Gerar todos os gráficos
-    #generate_all_plots(detailed_results_path, plots_output_dir)
-
+    # Step 4: Ensure Temporal Consistency of Communities
+    
     graphs_dir = 'data/graphs'
-    #generate_all_party_inclination_plots(graphs_dir, plots_output_dir)
 
-    # Carregar os grafos
+    # Load Graphs
     graphs = load_graphs(graphs_dir)
     
-    # Extrair os dados dos partidos e comunidades ao longo dos anos
+    # Extract data from parties and communities over the years
     party_data_by_year = get_party_percentages_by_year(graphs)
-    
-    # Rankear partidos com maior número de deputados
-    #party_ranking = rank_parties_by_deputies(party_data_by_year)
-    
-    # Listar partidos que aparecem em todos os anos e no último ano
-    #retained_parties, current_parties = get_parties_by_year(party_data_by_year)
-    
-    # Deputados por comunidade para os partidos que se mantiveram
-    #retained_parties_data = get_deputados_for_retained_parties(party_data_by_year, retained_parties)
-    
-    # Deputados por comunidade para os partidos atuais
-    #current_parties_data = get_deputados_for_current_parties(party_data_by_year, current_parties)
-    
-    # Rankear partidos baseados na diferença percentual de deputados entre comunidades
-    #percentage_diff_ranking = rank_parties_by_percentage_difference(party_data_by_year, current_parties)
-    
-    # Verificar o top partido de cada comunidade no ano mais recente
-    #top_parties_last_year = get_top_parties_per_community_last_year(party_data_by_year)
-    
-    # Plotar comparações dos partidos com os maiores partidos de cada comunidade (apenas top 7)
-    #plot_party_comparison_consistent(party_data_by_year, top_parties_last_year, partido_1="PL", partido_0="PT", top_n=7)
 
-    # Exportar a tabela com a quantidade de deputados por partido em cada comunidade ao longo dos anos
+    # Export the table with the number of deputies per party in each community over the years
     export_party_community_table(party_data_by_year, output_file='data/party_community_table.csv')
 
     df = clean_dataframe(pd.read_csv('data/party_community_table.csv'))
@@ -111,24 +73,25 @@ def main():
     sorted_df = sort_columns(adjusted_df)
 
     export_dataframe_to_csv(sorted_df, 'data/party_community_table_adjusted.csv')
-
-    #plot_community_graphs('data/party_community_table_adjusted.csv')
     
-    df_merged, df_orgao_deputado = data_processing()
-    df_votacao_parlamentar = pd.read_csv('data/csv/votacao_parlamentar.csv')
-    df_votacao_parlamentar['data'] = pd.to_datetime(df_votacao_parlamentar['data'])
-    df_votacao_parlamentar['ano_votacao'] = df_votacao_parlamentar['data'].dt.year
+    # Processes the data and displays the DataFrame
+    df_votacao_parlamentar = data_processing_backbone()
+    print("Data processing completed. Final DataFrame structure:")
+    print(df_votacao_parlamentar.head())
 
-    # Define o intervalo de anos entre 2004 e 2023
+    # Comparison with Backbone extraction method
+
+    # Sets the range of years between 2004 and 2023
     years = range(2004, 2024)
+
     results = []
 
     for year in years:
-        df_votes_year = df_votacao_parlamentar[df_votacao_parlamentar['ano_votacao'] == year]
-        result = analyze_voting_network(df_votes_year, year)
-        results.append(result)
+        result = analyze_voting_network(df_votacao_parlamentar, year)
+        if result is not None:
+            results.append(result)
 
-    # Salvar resultados em um arquivo CSV
+    # Save results to a CSV file
     results_df = pd.DataFrame(results)
     results_df.to_csv('data/results_backbone.csv', index=False)
     print("Resultados salvos em 'data/results_backbone.csv'.")

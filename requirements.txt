@@ -11,3 +11,4 @@ scikit-learn
 cairocffi
 markupsafe==2.0.1
 python-ternary
+igraph
