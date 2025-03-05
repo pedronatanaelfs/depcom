@@ -1,14 +1,4 @@
 
-<img src="assets/ppgec.png" alt="drawing" width="200"/>
-
-## Identificação
-**Professor**: Diego Pinheiro, PhD
-
-**Master's Student**: Pedro Natanael
-
-**Course**: Network Science
-
-**Task**: Final Project
 
 # Analysis of Political Alliances and Community Detection in the Brazilian Congress Voting Network
 
